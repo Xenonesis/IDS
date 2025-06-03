@@ -1,0 +1,65 @@
+project:
+  name: AI-Powered Browser Extension: Threat Detector
+  description: >
+    A browser extension built using Next.js for UI and custom scripts for background/content functionality.
+    It detects online threats such as phishing URLs, malware links, and anomalies using AI models and external APIs.
+
+features:
+  - name: Phishing URL Detection
+    description: Real-time scanning using Google Safe Browsing, VirusTotal, and AI-based classification.
+    apis:
+      - Google Safe Browsing API
+      - VirusTotal API
+    ai:
+      - TensorFlow.js
+
+  - name: Malware Link Detection
+    description: Scan download links using VirusTotal before they are triggered.
+    apis:
+      - VirusTotal API
+
+  - name: Anomaly Detection
+    optional: true
+    description: AI-driven behavioral monitoring for suspicious activity (e.g. redirects, JavaScript injection).
+    ai:
+      - Custom AI Model (TensorFlow.js or Flask backend)
+
+  - name: Threat Dashboard
+    description: Logs detected threats and lets users manage white/blacklists.
+
+  - name: Settings Page
+    description: Allow users to toggle features and manage trusted sites.
+
+tech_stack:
+  UI:
+    framework: Next.js
+    styling: Tailwind CSS
+  Scripts:
+    background: JavaScript or TypeScript
+    content: Vanilla JavaScript
+  AI:
+    - TensorFlow.js
+    - Flask (optional for scikit-learn model hosting)
+  APIs:
+    - Google Safe Browsing API
+    - VirusTotal API
+    - URLScan.io (optional)
+  Storage:
+    - Chrome Storage API
+
+structure:
+  root: extension-root/
+  folders:
+    - public/
+    - pages/
+    - components/
+    - styles/
+    - ai/
+    - api/
+  files:
+    - background.js
+    - contentScript.js
+    - popup.html
+    - popup.js
+    - manifest.json
+    - plan.md

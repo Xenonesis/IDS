@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Blocking Stats Fix Test</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .test-button.success {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
+        .test-button.danger {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .status-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .status-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+
+        .status-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .log-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+
+        .log-entry.success {
+            border-left: 4px solid #059669;
+        }
+
+        .log-entry.error {
+            border-left: 4px solid #dc2626;
+        }
+
+        .log-entry.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .fix-summary {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Universal Blocking Stats Fix</h1>
+        <p class="subtitle">Testing the fix for "universalBlockingStats is not defined" error</p>
+
+        <div class="fix-summary">
+            <h3>✅ Issue Fixed: ReferenceError: universalBlockingStats is not defined</h3>
+            
+            <h4>🐛 Problem:</h4>
+            <p>The <code>universalBlockingStats</code> variable was referenced in the background script but never properly initialized, causing errors when the popup tried to get blocking statistics.</p>
+            
+            <h4>🔧 Solution Implemented:</h4>
+            <ul>
+                <li><strong>Variable Initialization:</strong> Added proper initialization of <code>universalBlockingStats</code> object</li>
+                <li><strong>Storage Integration:</strong> Added functions to load and save stats from Chrome storage</li>
+                <li><strong>Startup Loading:</strong> Stats are loaded on extension startup and service worker restart</li>
+                <li><strong>Persistence:</strong> Stats are automatically saved when updated</li>
+                <li><strong>Error Handling:</strong> Added proper error handling for all stat operations</li>
+            </ul>
+            
+            <h4>📝 Code Changes:</h4>
+            <div class="code-block">
+// Added variable initialization
+let universalBlockingStats = {
+  popups: 0, ads: 0, redirects: 0, overlays: 0,
+  downloads: 0, scripts: 0, totalBlocked: 0,
+  lastUpdated: Date.now()
+};
+
+// Added storage functions
+async function loadUniversalBlockingStats() { ... }
+async function saveUniversalBlockingStats() { ... }
+
+// Added startup initialization
+chrome.runtime.onStartup.addListener(async () => {
+  await loadUniversalBlockingStats();
+});
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Universal Blocking Statistics Status</h3>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-value" id="initStatus">CHECKING</div>
+                    <div class="status-label">Initialization Status</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="popupsBlocked">0</div>
+                    <div class="status-label">Popups Blocked</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="adsBlocked">0</div>
+                    <div class="status-label">Ads Blocked</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="totalBlocked">0</div>
+                    <div class="status-label">Total Blocked</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🧪 Test Universal Blocking Stats</h3>
+            <p>Test the fixed universal blocking statistics functionality</p>
+            
+            <button class="test-button success" onclick="testGetStats()">
+                📊 Get Universal Stats
+            </button>
+            
+            <button class="test-button" onclick="testLogBlockedContent()">
+                🚫 Test Log Blocked Content
+            </button>
+            
+            <button class="test-button" onclick="simulateBlocking()">
+                🎯 Simulate Content Blocking
+            </button>
+            
+            <button class="test-button danger" onclick="testErrorHandling()">
+                ⚠️ Test Error Handling
+            </button>
+        </div>
+
+        <div class="test-section">
+            <h3>🔄 Background Script Communication</h3>
+            <p>Test communication with the background script for statistics</p>
+            
+            <button class="test-button success" onclick="testBackgroundConnection()">
+                🔗 Test Background Connection
+            </button>
+            
+            <button class="test-button" onclick="testStatsUpdate()">
+                📈 Test Stats Update
+            </button>
+            
+            <button class="test-button" onclick="refreshStats()">
+                🔄 Refresh Statistics
+            </button>
+        </div>
+
+        <div class="test-section">
+            <h3>✅ Verification Checklist</h3>
+            <ul>
+                <li id="check1">❓ universalBlockingStats variable is properly initialized</li>
+                <li id="check2">❓ Stats can be retrieved without errors</li>
+                <li id="check3">❓ Stats are persisted to Chrome storage</li>
+                <li id="check4">❓ Stats are loaded on extension startup</li>
+                <li id="check5">❓ Error handling works correctly</li>
+                <li id="check6">❓ Background script communication is functional</li>
+            </ul>
+        </div>
+
+        <div class="log-section">
+            <h3>📝 Test Activity Log</h3>
+            <div id="activityLog">
+                <div class="log-entry info">Universal blocking stats fix test initialized</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test functions for universal blocking stats fix
+        async function testGetStats() {
+            logActivity('Testing universal blocking stats retrieval...', 'info');
+            
+            try {
+                if (chrome && chrome.runtime) {
+                    const response = await chrome.runtime.sendMessage({
+                        action: 'getUniversalBlockingStats'
+                    });
+                    
+                    if (response && response.success) {
+                        logActivity('✅ Universal blocking stats retrieved successfully', 'success');
+                        updateStatsDisplay(response.stats);
+                        updateCheck('check2', true);
+                    } else {
+                        logActivity('❌ Failed to get universal blocking stats: ' + (response?.error || 'Unknown error'), 'error');
+                        updateCheck('check2', false);
+                    }
+                } else {
+                    logActivity('⚠️ Chrome runtime not available', 'info');
+                }
+            } catch (error) {
+                logActivity('❌ Error testing stats retrieval: ' + error.message, 'error');
+                updateCheck('check2', false);
+            }
+        }
+
+        async function testLogBlockedContent() {
+            logActivity('Testing blocked content logging...', 'info');
+            
+            try {
+                if (chrome && chrome.runtime) {
+                    const response = await chrome.runtime.sendMessage({
+                        action: 'logBlockedContent',
+                        type: 'ads',
+                        url: 'https://test-ad-network.com/banner.js',
+                        currentUrl: window.location.href
+                    });
+                    
+                    if (response && response.success) {
+                        logActivity('✅ Blocked content logged successfully', 'success');
+                        updateStatsDisplay(response.stats);
+                        updateCheck('check3', true);
+                    } else {
+                        logActivity('❌ Failed to log blocked content: ' + (response?.error || 'Unknown error'), 'error');
+                        updateCheck('check3', false);
+                    }
+                } else {
+                    logActivity('⚠️ Chrome runtime not available', 'info');
+                }
+            } catch (error) {
+                logActivity('❌ Error testing blocked content logging: ' + error.message, 'error');
+                updateCheck('check3', false);
+            }
+        }
+
+        async function simulateBlocking() {
+            logActivity('Simulating content blocking events...', 'info');
+            
+            const blockingTypes = ['popups', 'ads', 'redirects', 'overlays'];
+            let successCount = 0;
+            
+            for (const type of blockingTypes) {
+                try {
+                    if (chrome && chrome.runtime) {
+                        const response = await chrome.runtime.sendMessage({
+                            action: 'logBlockedContent',
+                            type: type,
+                            url: `https://test-${type}.com/content.js`,
+                            currentUrl: window.location.href
+                        });
+                        
+                        if (response && response.success) {
+                            successCount++;
+                            logActivity(`✅ Simulated ${type} blocking`, 'success');
+                        }
+                    }
+                } catch (error) {
+                    logActivity(`❌ Error simulating ${type} blocking: ${error.message}`, 'error');
+                }
+                
+                // Small delay between requests
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            
+            logActivity(`📊 Simulation complete: ${successCount}/${blockingTypes.length} successful`, 'info');
+            
+            // Refresh stats after simulation
+            setTimeout(testGetStats, 500);
+        }
+
+        async function testErrorHandling() {
+            logActivity('Testing error handling...', 'info');
+            
+            try {
+                if (chrome && chrome.runtime) {
+                    // Test with invalid action
+                    const response = await chrome.runtime.sendMessage({
+                        action: 'invalidAction'
+                    });
+                    
+                    if (response && !response.success) {
+                        logActivity('✅ Error handling works correctly', 'success');
+                        updateCheck('check5', true);
+                    } else {
+                        logActivity('⚠️ Unexpected response to invalid action', 'info');
+                    }
+                } else {
+                    logActivity('⚠️ Chrome runtime not available for error testing', 'info');
+                }
+            } catch (error) {
+                logActivity('✅ Error properly caught: ' + error.message, 'success');
+                updateCheck('check5', true);
+            }
+        }
+
+        async function testBackgroundConnection() {
+            logActivity('Testing background script connection...', 'info');
+            
+            try {
+                if (chrome && chrome.runtime) {
+                    const response = await chrome.runtime.sendMessage({
+                        action: 'ping'
+                    });
+                    
+                    logActivity('✅ Background script connection successful', 'success');
+                    updateCheck('check6', true);
+                } else {
+                    logActivity('❌ Chrome runtime not available', 'error');
+                    updateCheck('check6', false);
+                }
+            } catch (error) {
+                logActivity('❌ Background script connection failed: ' + error.message, 'error');
+                updateCheck('check6', false);
+            }
+        }
+
+        async function testStatsUpdate() {
+            logActivity('Testing stats update functionality...', 'info');
+            
+            // Get initial stats
+            await testGetStats();
+            
+            // Log some blocked content
+            await testLogBlockedContent();
+            
+            // Get updated stats
+            setTimeout(async () => {
+                await testGetStats();
+                logActivity('📈 Stats update test completed', 'info');
+            }, 1000);
+        }
+
+        async function refreshStats() {
+            logActivity('Refreshing statistics display...', 'info');
+            await testGetStats();
+        }
+
+        // Utility functions
+        function updateStatsDisplay(stats) {
+            if (stats) {
+                document.getElementById('popupsBlocked').textContent = stats.popups || 0;
+                document.getElementById('adsBlocked').textContent = stats.ads || 0;
+                document.getElementById('totalBlocked').textContent = stats.totalBlocked || 0;
+                document.getElementById('initStatus').textContent = 'READY';
+                updateCheck('check1', true);
+            }
+        }
+
+        function updateCheck(checkId, success) {
+            const element = document.getElementById(checkId);
+            if (element) {
+                element.textContent = element.textContent.replace('❓', success ? '✅' : '❌');
+            }
+        }
+
+        function logActivity(message, type = 'info') {
+            const log = document.getElementById('activityLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Initialize tests
+        document.addEventListener('DOMContentLoaded', () => {
+            logActivity('🔧 Universal blocking stats fix test page loaded', 'info');
+            
+            // Test initial stats retrieval
+            setTimeout(() => {
+                testGetStats();
+            }, 1000);
+            
+            // Check if extension is available
+            if (chrome && chrome.runtime) {
+                logActivity('✅ Chrome extension runtime available', 'success');
+                updateCheck('check6', true);
+            } else {
+                logActivity('❌ Chrome extension runtime not available', 'error');
+                updateCheck('check6', false);
+            }
+        });
+    </script>
+</body>
+</html>

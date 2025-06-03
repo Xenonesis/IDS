@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manifest V3 Universal Blocker Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .test-button.danger {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+        }
+
+        .test-button.success {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
+        .status-section {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .status-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .status-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+
+        .status-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .log-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+
+        .log-entry.success {
+            border-left: 4px solid #059669;
+        }
+
+        .log-entry.error {
+            border-left: 4px solid #dc2626;
+        }
+
+        .log-entry.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .instructions {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .warning {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Test ad elements that should be blocked */
+        .ad-banner, .advertisement, .google-ads, .adsense {
+            background: #ff6b6b;
+            color: white;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ Manifest V3 Universal Blocker Test</h1>
+        <p class="subtitle">Testing Manifest V3 compatible content blocking with declarativeNetRequest</p>
+
+        <div class="instructions">
+            <h3>✅ Manifest V3 Compatibility Features</h3>
+            <ul>
+                <li><strong>DeclarativeNetRequest</strong> - Network-level blocking without webRequest</li>
+                <li><strong>Static Rule Sets</strong> - Pre-defined ad and malicious domain blocking</li>
+                <li><strong>Dynamic Rules</strong> - Runtime threat-based blocking rules</li>
+                <li><strong>Content Script Blocking</strong> - DOM-level popup and ad removal</li>
+                <li><strong>Service Worker Background</strong> - Persistent protection</li>
+                <li><strong>No webRequestBlocking</strong> - Fully Manifest V3 compatible</li>
+            </ul>
+        </div>
+
+        <div class="status-section">
+            <h3>📊 Real-Time Blocking Status</h3>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-value" id="manifestVersion">V3</div>
+                    <div class="status-label">Manifest Version</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="blockerStatus">ACTIVE</div>
+                    <div class="status-label">Blocker Status</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="popupsBlocked">0</div>
+                    <div class="status-label">Popups Blocked</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="adsBlocked">0</div>
+                    <div class="status-label">Ads Blocked</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="networkBlocked">0</div>
+                    <div class="status-label">Network Requests Blocked</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🚫 Popup Blocking Tests (Content Script)</h3>
+            <p>Test popup blocking using content script method overrides</p>
+            
+            <button class="test-button danger" onclick="testBasicPopup()">
+                Test Basic Popup
+            </button>
+            
+            <button class="test-button danger" onclick="testMaliciousPopup()">
+                Test Malicious Popup
+            </button>
+            
+            <button class="test-button danger" onclick="testMultiplePopups()">
+                Test Multiple Popups
+            </button>
+        </div>
+
+        <div class="test-section">
+            <h3>🌐 Network-Level Blocking Tests (DeclarativeNetRequest)</h3>
+            <p>Test network-level blocking using Manifest V3 declarativeNetRequest</p>
+            
+            <button class="test-button danger" onclick="testAdNetworkBlocking()">
+                Test Ad Network Blocking
+            </button>
+            
+            <button class="test-button danger" onclick="testMaliciousDomainBlocking()">
+                Test Malicious Domain Blocking
+            </button>
+            
+            <button class="test-button danger" onclick="testDynamicRuleBlocking()">
+                Test Dynamic Rule Blocking
+            </button>
+        </div>
+
+        <div class="test-section">
+            <h3>📺 DOM-Level Ad Blocking Tests</h3>
+            <p>Test DOM-level ad detection and removal</p>
+            
+            <button class="test-button danger" onclick="createTestAds()">
+                Create Test Ads
+            </button>
+            
+            <button class="test-button danger" onclick="createDynamicAds()">
+                Create Dynamic Ads
+            </button>
+            
+            <button class="test-button danger" onclick="testAdNetworkIframes()">
+                Test Ad Network Iframes
+            </button>
+        </div>
+
+        <div class="test-section">
+            <h3>⚙️ System Status & Controls</h3>
+            <p>Monitor and control the universal blocker system</p>
+            
+            <button class="test-button success" onclick="checkManifestVersion()">
+                Check Manifest Version
+            </button>
+            
+            <button class="test-button success" onclick="getBlockingStats()">
+                Get Blocking Statistics
+            </button>
+            
+            <button class="test-button success" onclick="testDeclarativeNetRequest()">
+                Test DeclarativeNetRequest
+            </button>
+            
+            <button class="test-button" onclick="clearTestElements()">
+                Clear Test Elements
+            </button>
+        </div>
+
+        <div class="warning">
+            <h3>⚠️ Expected Behavior</h3>
+            <p><strong>Manifest V3 Compatibility:</strong> All blocking should work without webRequestBlocking permission. Network-level blocking uses declarativeNetRequest, content-level blocking uses DOM manipulation.</p>
+            <p><strong>Performance:</strong> Should maintain excellent performance with minimal impact on page loading.</p>
+        </div>
+
+        <div class="log-section">
+            <h3>📝 Test Activity Log</h3>
+            <div id="activityLog">
+                <div class="log-entry info">Manifest V3 Universal Blocker test page loaded</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test ad elements that should be blocked -->
+    <div class="ad-banner" id="testAd1">This is a test advertisement banner</div>
+    <div class="advertisement" id="testAd2">This is test promotional content</div>
+    <div class="google-ads" id="testAd3">This is a test Google Ads element</div>
+
+    <script>
+        // Test functions for Manifest V3 compatibility
+        function testBasicPopup() {
+            logActivity('Testing basic popup blocking...', 'info');
+            const popup = window.open('about:blank', '_blank', 'width=400,height=300');
+            if (popup) {
+                logActivity('❌ Basic popup was NOT blocked', 'error');
+            } else {
+                logActivity('✅ Basic popup was blocked', 'success');
+                updateBlockedCount('popups');
+            }
+        }
+
+        function testMaliciousPopup() {
+            logActivity('Testing malicious popup blocking...', 'info');
+            const popup = window.open('https://malicious-example.com', '_blank', 'popup=yes');
+            if (popup) {
+                logActivity('❌ Malicious popup was NOT blocked', 'error');
+            } else {
+                logActivity('✅ Malicious popup was blocked', 'success');
+                updateBlockedCount('popups');
+            }
+        }
+
+        function testMultiplePopups() {
+            logActivity('Testing multiple popup blocking...', 'info');
+            let blockedCount = 0;
+            
+            for (let i = 0; i < 5; i++) {
+                const popup = window.open(`https://popup-test-${i}.com`, '_blank');
+                if (!popup) blockedCount++;
+            }
+            
+            logActivity(`✅ ${blockedCount}/5 popups were blocked`, 'success');
+            updateBlockedCount('popups', blockedCount);
+        }
+
+        function testAdNetworkBlocking() {
+            logActivity('Testing ad network blocking via declarativeNetRequest...', 'info');
+            
+            // Test blocked ad networks
+            const adNetworks = [
+                'https://doubleclick.net/ads.js',
+                'https://googlesyndication.com/pagead.js',
+                'https://googleadservices.com/pagead.js'
+            ];
+            
+            adNetworks.forEach(url => {
+                fetch(url)
+                    .then(() => {
+                        logActivity(`❌ Ad network request NOT blocked: ${url}`, 'error');
+                    })
+                    .catch(() => {
+                        logActivity(`✅ Ad network request blocked: ${url}`, 'success');
+                        updateBlockedCount('network');
+                    });
+            });
+        }
+
+        function testMaliciousDomainBlocking() {
+            logActivity('Testing malicious domain blocking...', 'info');
+            
+            const maliciousDomains = [
+                'https://malicious-example.com',
+                'https://phishing-site.net',
+                'https://suspicious-redirect.com'
+            ];
+            
+            maliciousDomains.forEach(url => {
+                fetch(url)
+                    .then(() => {
+                        logActivity(`❌ Malicious domain NOT blocked: ${url}`, 'error');
+                    })
+                    .catch(() => {
+                        logActivity(`✅ Malicious domain blocked: ${url}`, 'success');
+                        updateBlockedCount('network');
+                    });
+            });
+        }
+
+        function testDynamicRuleBlocking() {
+            logActivity('Testing dynamic rule creation...', 'info');
+            
+            // This would test the background script's ability to create dynamic rules
+            if (chrome && chrome.runtime) {
+                chrome.runtime.sendMessage({
+                    action: 'testDynamicRules',
+                    domains: ['test-threat.com', 'dynamic-block.net']
+                }, (response) => {
+                    if (response && response.success) {
+                        logActivity('✅ Dynamic rules created successfully', 'success');
+                    } else {
+                        logActivity('❌ Dynamic rule creation failed', 'error');
+                    }
+                });
+            } else {
+                logActivity('⚠️ Chrome runtime not available for dynamic rule test', 'info');
+            }
+        }
+
+        function createTestAds() {
+            logActivity('Creating test advertisements...', 'info');
+            
+            const adContainer = document.createElement('div');
+            adContainer.className = 'test-ad-container';
+            adContainer.innerHTML = `
+                <div class="ad-banner">Test Banner Ad</div>
+                <div class="advertisement">Test Advertisement</div>
+                <iframe src="about:blank" class="google-ads"></iframe>
+                <div class="adsense">Test AdSense</div>
+            `;
+            
+            document.body.appendChild(adContainer);
+            
+            // Check if ads get blocked
+            setTimeout(() => {
+                const ads = adContainer.querySelectorAll('.ad-banner, .advertisement, .google-ads, .adsense');
+                let blockedCount = 0;
+                ads.forEach(ad => {
+                    if (ad.style.display === 'none' || ad.dataset.blockedBy) {
+                        blockedCount++;
+                    }
+                });
+                logActivity(`✅ ${blockedCount}/${ads.length} test ads were blocked`, 'success');
+                updateBlockedCount('ads', blockedCount);
+            }, 2000);
+        }
+
+        function createDynamicAds() {
+            logActivity('Creating dynamic advertisements...', 'info');
+            
+            setInterval(() => {
+                const dynamicAd = document.createElement('div');
+                dynamicAd.className = 'ad-banner dynamic-ad';
+                dynamicAd.textContent = 'Dynamic Ad - ' + Date.now();
+                document.body.appendChild(dynamicAd);
+                
+                // Check if it gets blocked
+                setTimeout(() => {
+                    if (dynamicAd.style.display === 'none' || dynamicAd.dataset.blockedBy) {
+                        logActivity('✅ Dynamic ad was blocked', 'success');
+                        updateBlockedCount('ads');
+                    }
+                }, 1000);
+            }, 3000);
+        }
+
+        function testAdNetworkIframes() {
+            logActivity('Testing ad network iframe blocking...', 'info');
+            
+            const adIframes = [
+                'https://doubleclick.net/ads',
+                'https://googlesyndication.com/ads',
+                'https://googleadservices.com/ads'
+            ];
+            
+            adIframes.forEach(src => {
+                const iframe = document.createElement('iframe');
+                iframe.src = src;
+                iframe.className = 'test-ad-iframe';
+                document.body.appendChild(iframe);
+                
+                setTimeout(() => {
+                    if (iframe.style.display === 'none' || iframe.dataset.blockedBy) {
+                        logActivity(`✅ Ad iframe blocked: ${src}`, 'success');
+                        updateBlockedCount('ads');
+                    }
+                }, 1000);
+            });
+        }
+
+        function checkManifestVersion() {
+            logActivity('Checking manifest version...', 'info');
+            
+            if (chrome && chrome.runtime && chrome.runtime.getManifest) {
+                const manifest = chrome.runtime.getManifest();
+                const version = manifest.manifest_version;
+                
+                document.getElementById('manifestVersion').textContent = `V${version}`;
+                
+                if (version === 3) {
+                    logActivity('✅ Manifest V3 confirmed - fully compatible', 'success');
+                } else {
+                    logActivity(`⚠️ Manifest V${version} detected`, 'info');
+                }
+            } else {
+                logActivity('⚠️ Chrome runtime not available', 'info');
+            }
+        }
+
+        function getBlockingStats() {
+            logActivity('Getting blocking statistics...', 'info');
+            
+            if (window.universalContentBlocker) {
+                const stats = window.universalContentBlocker.getBlockingStats();
+                updateStatsDisplay(stats);
+                logActivity(`📊 Stats: ${JSON.stringify(stats)}`, 'info');
+            } else {
+                logActivity('⚠️ Universal Content Blocker not found', 'info');
+            }
+        }
+
+        function testDeclarativeNetRequest() {
+            logActivity('Testing declarativeNetRequest API...', 'info');
+            
+            if (chrome && chrome.declarativeNetRequest) {
+                chrome.declarativeNetRequest.getDynamicRules((rules) => {
+                    logActivity(`✅ DeclarativeNetRequest available - ${rules.length} dynamic rules`, 'success');
+                });
+            } else {
+                logActivity('❌ DeclarativeNetRequest API not available', 'error');
+            }
+        }
+
+        function clearTestElements() {
+            logActivity('Clearing test elements...', 'info');
+            
+            document.querySelectorAll('.test-ad-container, .dynamic-ad, .test-ad-iframe').forEach(el => {
+                el.remove();
+            });
+            
+            logActivity('✅ Test elements cleared', 'success');
+        }
+
+        // Utility functions
+        function logActivity(message, type = 'info') {
+            const log = document.getElementById('activityLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function updateBlockedCount(type, count = 1) {
+            const element = document.getElementById(type + 'Blocked');
+            if (element) {
+                const current = parseInt(element.textContent) || 0;
+                element.textContent = current + count;
+            }
+        }
+
+        function updateStatsDisplay(stats) {
+            document.getElementById('popupsBlocked').textContent = stats.popups || 0;
+            document.getElementById('adsBlocked').textContent = stats.ads || 0;
+            document.getElementById('blockerStatus').textContent = stats.isEnabled ? 'ACTIVE' : 'INACTIVE';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            logActivity('🚀 Manifest V3 Universal Blocker test initialized', 'info');
+            
+            // Check if universal blocker is available
+            if (window.universalContentBlocker) {
+                logActivity('✅ Universal Content Blocker detected', 'success');
+                getBlockingStats();
+            } else {
+                logActivity('⚠️ Universal Content Blocker not detected - checking again in 2 seconds', 'info');
+                setTimeout(() => {
+                    if (window.universalContentBlocker) {
+                        logActivity('✅ Universal Content Blocker now detected', 'success');
+                        getBlockingStats();
+                    } else {
+                        logActivity('❌ Universal Content Blocker still not detected', 'error');
+                    }
+                }, 2000);
+            }
+            
+            // Check manifest version
+            checkManifestVersion();
+            
+            // Auto-refresh stats every 5 seconds
+            setInterval(() => {
+                if (window.universalContentBlocker) {
+                    const stats = window.universalContentBlocker.getBlockingStats();
+                    updateStatsDisplay(stats);
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

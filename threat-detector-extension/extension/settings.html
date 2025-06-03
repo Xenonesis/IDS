@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threat Detector Settings</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9fafb;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            margin: 0 0 1.5rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .setting-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.25rem;
+        }
+
+        .setting-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .toggle {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: #d1d5db;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .toggle.active {
+            background: #dc2626;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+
+        .toggle.active .toggle-slider {
+            transform: translateX(24px);
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        .input-field[type="password"] {
+            font-family: monospace;
+        }
+
+        .input-with-toggle {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover {
+            color: #374151;
+            background: rgba(107, 114, 128, 0.1);
+        }
+
+        .password-toggle:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .eye-icon {
+            transition: all 0.2s ease;
+        }
+
+        .password-toggle[data-visible="true"] .eye-icon {
+            opacity: 0.7;
+        }
+
+        .password-toggle[data-visible="false"] .eye-icon {
+            opacity: 1;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #b91c1c;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .save-status {
+            margin-left: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .save-status.success {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .save-status.error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .list-container {
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-add {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .list-add input {
+            flex: 1;
+        }
+
+        .remove-btn {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background: #fee2e2;
+        }
+
+        .api-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+        }
+
+        .api-status.configured {
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .api-status.not-configured {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+
+        .back-link:hover {
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="#" class="back-link" id="backLink">
+            ← Back to Extension
+        </a>
+
+        <div class="header">
+            <h1>🛡️ Threat Detector Settings</h1>
+            <p>Configure your threat detection preferences and API keys</p>
+        </div>
+
+        <div class="section">
+            <h2>🔧 Detection Settings</h2>
+            <div class="setting-group">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Real-time Protection</div>
+                        <div class="setting-description">Automatically scan websites as you browse</div>
+                    </div>
+                    <div class="toggle active" id="realTimeToggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Phishing Detection</div>
+                        <div class="setting-description">Detect and warn about phishing websites</div>
+                    </div>
+                    <div class="toggle active" id="phishingToggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Malware Detection</div>
+                        <div class="setting-description">Scan for malicious downloads and websites</div>
+                    </div>
+                    <div class="toggle active" id="malwareToggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Anomaly Detection</div>
+                        <div class="setting-description">Use AI to detect suspicious website behavior</div>
+                    </div>
+                    <div class="toggle" id="anomalyToggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔑 API Configuration</h2>
+            <div class="setting-group">
+                <div class="input-group">
+                    <label class="input-label">
+                        Google Safe Browsing API Key
+                        <span class="api-status not-configured" id="googleStatus">Not Configured</span>
+                    </label>
+                    <div class="input-with-toggle">
+                        <input type="password" class="input-field" id="googleApiKey"
+                               placeholder="Enter your Google Safe Browsing API key">
+                        <button type="button" class="password-toggle" data-target="googleApiKey">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">
+                        VirusTotal API Key
+                        <span class="api-status not-configured" id="virusTotalStatus">Not Configured</span>
+                    </label>
+                    <div class="input-with-toggle">
+                        <input type="password" class="input-field" id="virusTotalApiKey"
+                               placeholder="Enter your VirusTotal API key">
+                        <button type="button" class="password-toggle" data-target="virusTotalApiKey">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">
+                        PhishTank API Key (Optional)
+                        <span class="api-status not-configured" id="phishTankStatus">Not Configured</span>
+                    </label>
+                    <div class="input-with-toggle">
+                        <input type="password" class="input-field" id="phishTankApiKey"
+                               placeholder="Enter your PhishTank API key (optional)">
+                        <button type="button" class="password-toggle" data-target="phishTankApiKey">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">
+                        URLScan.io API Key
+                        <span class="api-status configured" id="urlScanStatus">Configured</span>
+                    </label>
+                    <div class="input-with-toggle">
+                        <input type="password" class="input-field" id="urlScanApiKey"
+                               placeholder="Enter your URLScan.io API key">
+                        <button type="button" class="password-toggle" data-target="urlScanApiKey">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✅ Whitelist</h2>
+            <p style="color: #6b7280; margin-bottom: 1rem;">Trusted domains that will never be flagged as threats</p>
+            <div class="list-container" id="whitelistContainer">
+                <!-- Whitelist items will be populated here -->
+            </div>
+            <div class="list-add">
+                <input type="text" class="input-field" id="newWhitelistDomain" placeholder="Enter domain (e.g., example.com)">
+                <button type="button" class="btn btn-secondary" id="addWhitelistBtn">Add</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🚫 Blacklist</h2>
+            <p style="color: #6b7280; margin-bottom: 1rem;">Domains that will always be flagged as threats</p>
+            <div class="list-container" id="blacklistContainer">
+                <!-- Blacklist items will be populated here -->
+            </div>
+            <div class="list-add">
+                <input type="text" class="input-field" id="newBlacklistDomain" placeholder="Enter domain (e.g., malicious-site.com)">
+                <button type="button" class="btn btn-secondary" id="addBlacklistBtn">Add</button>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <button type="button" class="btn btn-primary" id="saveButton">
+                Save Settings
+            </button>
+            <span class="save-status" id="saveStatus" style="display: none;"></span>
+        </div>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+</html>

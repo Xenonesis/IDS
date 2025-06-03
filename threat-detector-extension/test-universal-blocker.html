@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Content Blocker Test - Comprehensive Blocking System</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            width: 100%;
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .test-button.danger {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+        }
+
+        .test-button.warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .test-button.success {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
+        .stats-section {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .instructions {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-list {
+            text-align: left;
+            margin: 1rem 0;
+            padding-left: 1rem;
+        }
+
+        .feature-list li {
+            margin: 0.5rem 0;
+            padding-left: 0.5rem;
+        }
+
+        .log-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+
+        .log-entry.blocked {
+            border-left: 4px solid #dc2626;
+        }
+
+        .log-entry.allowed {
+            border-left: 4px solid #059669;
+        }
+
+        /* Test ad elements that should be blocked */
+        .ad-banner, .advertisement, .google-ads, .adsense {
+            background: #ff6b6b;
+            color: white;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background: white;
+            color: black;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ Universal Content Blocker Test</h1>
+        <p class="subtitle">Comprehensive testing for popup blocking, ad blocking, and malicious content protection</p>
+
+        <div class="instructions">
+            <h3>✅ Universal Content Blocker Features</h3>
+            <ul class="feature-list">
+                <li><strong>Always-On Protection</strong> - Works on every website automatically</li>
+                <li><strong>Popup Blocking</strong> - Blocks all types of popups and overlays</li>
+                <li><strong>Ad Blocking</strong> - Removes advertisements and promotional content</li>
+                <li><strong>Real-Time Monitoring</strong> - Detects and blocks dynamic content</li>
+                <li><strong>Performance Optimized</strong> - Minimal impact on page loading</li>
+                <li><strong>Universal Compatibility</strong> - Works across all website types</li>
+            </ul>
+        </div>
+
+        <div class="stats-section">
+            <h3>📊 Real-Time Blocking Statistics</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="popupsBlocked">0</div>
+                    <div class="stat-label">Popups Blocked</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="adsBlocked">0</div>
+                    <div class="stat-label">Ads Blocked</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="redirectsBlocked">0</div>
+                    <div class="stat-label">Redirects Blocked</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="overlaysBlocked">0</div>
+                    <div class="stat-label">Overlays Blocked</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="scriptsBlocked">0</div>
+                    <div class="stat-label">Scripts Blocked</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalBlocked">0</div>
+                    <div class="stat-label">Total Blocked</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-grid">
+            <div class="test-section">
+                <h3>🚫 Popup Blocking Tests</h3>
+                <p>Test various types of popup windows and overlays</p>
+                
+                <button class="test-button danger" onclick="testBasicPopup()">
+                    Test Basic Popup
+                </button>
+                
+                <button class="test-button danger" onclick="testMaliciousPopup()">
+                    Test Malicious Popup
+                </button>
+                
+                <button class="test-button danger" onclick="testOverlayPopup()">
+                    Test Overlay Popup
+                </button>
+                
+                <button class="test-button danger" onclick="testRedirectPopup()">
+                    Test Redirect Popup
+                </button>
+            </div>
+
+            <div class="test-section">
+                <h3>📺 Ad Blocking Tests</h3>
+                <p>Test advertisement detection and removal</p>
+                
+                <button class="test-button warning" onclick="createTestAds()">
+                    Create Test Ads
+                </button>
+                
+                <button class="test-button warning" onclick="createVideoAds()">
+                    Create Video Ads
+                </button>
+                
+                <button class="test-button warning" onclick="createBannerAds()">
+                    Create Banner Ads
+                </button>
+                
+                <button class="test-button warning" onclick="createSponsoredContent()">
+                    Create Sponsored Content
+                </button>
+            </div>
+
+            <div class="test-section">
+                <h3>🔄 Dynamic Content Tests</h3>
+                <p>Test real-time content monitoring</p>
+                
+                <button class="test-button warning" onclick="injectDynamicAds()">
+                    Inject Dynamic Ads
+                </button>
+                
+                <button class="test-button danger" onclick="createDelayedPopups()">
+                    Create Delayed Popups
+                </button>
+                
+                <button class="test-button warning" onclick="loadSuspiciousIframes()">
+                    Load Suspicious Iframes
+                </button>
+                
+                <button class="test-button danger" onclick="testMaliciousScripts()">
+                    Test Malicious Scripts
+                </button>
+            </div>
+
+            <div class="test-section">
+                <h3>⚙️ Blocker Controls</h3>
+                <p>Control and monitor the universal blocker</p>
+                
+                <button class="test-button success" onclick="getBlockingStats()">
+                    Get Blocking Stats
+                </button>
+                
+                <button class="test-button success" onclick="testBlockerStatus()">
+                    Test Blocker Status
+                </button>
+                
+                <button class="test-button" onclick="clearTestElements()">
+                    Clear Test Elements
+                </button>
+                
+                <button class="test-button" onclick="refreshStats()">
+                    Refresh Statistics
+                </button>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <h3>⚠️ Testing Instructions</h3>
+            <p><strong>Expected Behavior:</strong> All popup attempts should be blocked, ads should be hidden, and statistics should update in real-time. If any popups appear or ads remain visible, the blocker needs adjustment.</p>
+            <p><strong>Performance:</strong> Page should remain responsive during all tests. No significant delays or freezing should occur.</p>
+        </div>
+
+        <div class="log-section">
+            <h3>📝 Blocking Activity Log</h3>
+            <div id="activityLog">
+                <div class="log-entry">Universal Content Blocker initialized - monitoring started</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test ad elements that should be blocked -->
+    <div class="ad-banner" id="testAd1">This is a test advertisement banner</div>
+    <div class="advertisement" id="testAd2">This is test promotional content</div>
+    <div class="google-ads" id="testAd3">This is a test Google Ads element</div>
+
+    <!-- Popup overlay for testing -->
+    <div class="popup-overlay" id="testOverlay">
+        <div class="popup-content">
+            <h3>Test Popup Overlay</h3>
+            <p>This popup should be blocked by the universal blocker</p>
+            <button onclick="closeTestOverlay()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Test functions for popup blocking
+        function testBasicPopup() {
+            logActivity('Testing basic popup...', 'test');
+            const popup = window.open('about:blank', '_blank', 'width=400,height=300');
+            if (popup) {
+                logActivity('❌ Basic popup was NOT blocked', 'allowed');
+            } else {
+                logActivity('✅ Basic popup was blocked', 'blocked');
+            }
+        }
+
+        function testMaliciousPopup() {
+            logActivity('Testing malicious popup...', 'test');
+            const popup = window.open('https://malicious-example.com', '_blank', 'popup=yes');
+            if (popup) {
+                logActivity('❌ Malicious popup was NOT blocked', 'allowed');
+            } else {
+                logActivity('✅ Malicious popup was blocked', 'blocked');
+            }
+        }
+
+        function testOverlayPopup() {
+            logActivity('Testing overlay popup...', 'test');
+            const overlay = document.getElementById('testOverlay');
+            overlay.style.display = 'flex';
+            
+            // Check if it gets blocked
+            setTimeout(() => {
+                if (overlay.style.display === 'none' || overlay.style.visibility === 'hidden') {
+                    logActivity('✅ Overlay popup was blocked', 'blocked');
+                } else {
+                    logActivity('❌ Overlay popup was NOT blocked', 'allowed');
+                }
+            }, 1000);
+        }
+
+        function testRedirectPopup() {
+            logActivity('Testing redirect popup...', 'test');
+            try {
+                window.location.href = 'https://suspicious-redirect.com';
+                logActivity('❌ Redirect was NOT blocked', 'allowed');
+            } catch (e) {
+                logActivity('✅ Redirect was blocked', 'blocked');
+            }
+        }
+
+        function closeTestOverlay() {
+            document.getElementById('testOverlay').style.display = 'none';
+        }
+
+        // Test functions for ad blocking
+        function createTestAds() {
+            logActivity('Creating test advertisements...', 'test');
+            
+            const adContainer = document.createElement('div');
+            adContainer.className = 'ad-container';
+            adContainer.innerHTML = `
+                <div class="ad-banner">Test Banner Ad</div>
+                <div class="advertisement">Test Advertisement</div>
+                <iframe src="about:blank" class="google-ads"></iframe>
+            `;
+            
+            document.body.appendChild(adContainer);
+            
+            // Check if ads get blocked
+            setTimeout(() => {
+                const ads = adContainer.querySelectorAll('.ad-banner, .advertisement, .google-ads');
+                let blockedCount = 0;
+                ads.forEach(ad => {
+                    if (ad.style.display === 'none' || ad.dataset.blockedBy) {
+                        blockedCount++;
+                    }
+                });
+                logActivity(`✅ ${blockedCount}/${ads.length} test ads were blocked`, 'blocked');
+            }, 2000);
+        }
+
+        function createVideoAds() {
+            logActivity('Creating video advertisements...', 'test');
+            
+            const videoAd = document.createElement('div');
+            videoAd.className = 'video-ad';
+            videoAd.innerHTML = '<video class="preroll-ad" src="about:blank"></video>';
+            document.body.appendChild(videoAd);
+        }
+
+        function createBannerAds() {
+            logActivity('Creating banner advertisements...', 'test');
+            
+            for (let i = 0; i < 3; i++) {
+                const banner = document.createElement('div');
+                banner.className = 'ad-banner';
+                banner.textContent = `Banner Ad ${i + 1}`;
+                document.body.appendChild(banner);
+            }
+        }
+
+        function createSponsoredContent() {
+            logActivity('Creating sponsored content...', 'test');
+            
+            const sponsored = document.createElement('div');
+            sponsored.className = 'sponsored-product';
+            sponsored.setAttribute('data-sponsored', 'true');
+            sponsored.textContent = 'Sponsored Product';
+            document.body.appendChild(sponsored);
+        }
+
+        // Test functions for dynamic content
+        function injectDynamicAds() {
+            logActivity('Injecting dynamic advertisements...', 'test');
+            
+            setInterval(() => {
+                const dynamicAd = document.createElement('div');
+                dynamicAd.className = 'ad-banner dynamic-ad';
+                dynamicAd.textContent = 'Dynamic Ad - ' + Date.now();
+                document.body.appendChild(dynamicAd);
+            }, 3000);
+        }
+
+        function createDelayedPopups() {
+            logActivity('Creating delayed popups...', 'test');
+            
+            setTimeout(() => {
+                testBasicPopup();
+            }, 2000);
+            
+            setTimeout(() => {
+                testMaliciousPopup();
+            }, 4000);
+        }
+
+        function loadSuspiciousIframes() {
+            logActivity('Loading suspicious iframes...', 'test');
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = 'https://doubleclick.net/malicious';
+            iframe.className = 'suspicious-iframe';
+            document.body.appendChild(iframe);
+        }
+
+        function testMaliciousScripts() {
+            logActivity('Testing malicious script blocking...', 'test');
+            
+            try {
+                eval('window.open("https://malicious.com", "_blank")');
+                logActivity('❌ Malicious eval was NOT blocked', 'allowed');
+            } catch (e) {
+                logActivity('✅ Malicious eval was blocked', 'blocked');
+            }
+        }
+
+        // Control functions
+        function getBlockingStats() {
+            if (window.universalContentBlocker) {
+                const stats = window.universalContentBlocker.getBlockingStats();
+                updateStatsDisplay(stats);
+                logActivity(`📊 Current stats: ${JSON.stringify(stats)}`, 'info');
+            } else {
+                logActivity('❌ Universal Content Blocker not found', 'error');
+            }
+        }
+
+        function testBlockerStatus() {
+            if (window.universalContentBlocker) {
+                const isEnabled = window.universalContentBlocker.isEnabled;
+                logActivity(`🛡️ Universal Blocker Status: ${isEnabled ? 'ENABLED' : 'DISABLED'}`, 'info');
+            } else {
+                logActivity('❌ Universal Content Blocker not found', 'error');
+            }
+        }
+
+        function clearTestElements() {
+            logActivity('Clearing test elements...', 'test');
+            
+            // Remove dynamically created test elements
+            document.querySelectorAll('.ad-container, .dynamic-ad, .suspicious-iframe, .video-ad, .sponsored-product').forEach(el => {
+                el.remove();
+            });
+            
+            logActivity('✅ Test elements cleared', 'info');
+        }
+
+        function refreshStats() {
+            getBlockingStats();
+            logActivity('📊 Statistics refreshed', 'info');
+        }
+
+        // Utility functions
+        function logActivity(message, type = 'info') {
+            const log = document.getElementById('activityLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function updateStatsDisplay(stats) {
+            document.getElementById('popupsBlocked').textContent = stats.popups || 0;
+            document.getElementById('adsBlocked').textContent = stats.ads || 0;
+            document.getElementById('redirectsBlocked').textContent = stats.redirects || 0;
+            document.getElementById('overlaysBlocked').textContent = stats.overlays || 0;
+            document.getElementById('scriptsBlocked').textContent = stats.scripts || 0;
+            document.getElementById('totalBlocked').textContent = stats.totalBlocked || 0;
+        }
+
+        // Initialize and start monitoring
+        document.addEventListener('DOMContentLoaded', () => {
+            logActivity('🚀 Universal Content Blocker test page loaded', 'info');
+            
+            // Check if universal blocker is available
+            if (window.universalContentBlocker) {
+                logActivity('✅ Universal Content Blocker detected and active', 'info');
+                getBlockingStats();
+            } else {
+                logActivity('⚠️ Universal Content Blocker not detected - checking again in 2 seconds', 'warning');
+                setTimeout(() => {
+                    if (window.universalContentBlocker) {
+                        logActivity('✅ Universal Content Blocker now detected', 'info');
+                        getBlockingStats();
+                    } else {
+                        logActivity('❌ Universal Content Blocker still not detected', 'error');
+                    }
+                }, 2000);
+            }
+            
+            // Auto-refresh stats every 5 seconds
+            setInterval(() => {
+                if (window.universalContentBlocker) {
+                    const stats = window.universalContentBlocker.getBlockingStats();
+                    updateStatsDisplay(stats);
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

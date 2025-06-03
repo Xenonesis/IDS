@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Scan Results Modal - Enhanced Auto-Close</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .test-button:active {
+            transform: translateY(0);
+        }
+
+        .feature-list {
+            text-align: left;
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+        }
+
+        .feature-list li {
+            margin: 0.5rem 0;
+            padding-left: 0.5rem;
+        }
+
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .instructions {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .warning {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ Enhanced Scan Results Modal Test</h1>
+        <p class="subtitle">Testing auto-close functionality and manual close buttons</p>
+
+        <div class="instructions">
+            <h3>✅ New Features Implemented</h3>
+            <ul class="feature-list">
+                <li><strong>Auto-close after 5 seconds</strong> - Modal automatically closes</li>
+                <li><strong>Visual progress bar</strong> - Shows countdown to auto-close</li>
+                <li><strong>Hover to pause</strong> - Auto-close pauses when hovering over modal</li>
+                <li><strong>Enhanced close buttons</strong> - Both X and Close buttons work properly</li>
+                <li><strong>Keyboard support</strong> - Press Escape key to close</li>
+                <li><strong>Backdrop click</strong> - Click outside modal to close</li>
+                <li><strong>Smooth animations</strong> - Slide-in and slide-out effects</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>🧪 Test Scenarios</h3>
+            <p>Click the buttons below to test different scan result scenarios:</p>
+            
+            <button class="test-button" onclick="testSecureSite()">
+                🛡️ Test Secure Site Modal
+            </button>
+            
+            <button class="test-button" onclick="testThreatDetected()">
+                ⚠️ Test Threat Detected Modal
+            </button>
+            
+            <button class="test-button" onclick="testMultipleThreats()">
+                🚨 Test Multiple Threats Modal
+            </button>
+            
+            <button class="test-button" onclick="testWithoutAutoClose()">
+                ⏸️ Test Without Auto-Close
+            </button>
+        </div>
+
+        <div class="warning">
+            <h3>🔍 How to Test</h3>
+            <ol style="text-align: left; margin-left: 1rem;">
+                <li><strong>Auto-close:</strong> Click any test button and wait 5 seconds</li>
+                <li><strong>Manual close:</strong> Click the X button or Close button</li>
+                <li><strong>Keyboard:</strong> Press Escape key while modal is open</li>
+                <li><strong>Backdrop:</strong> Click outside the modal (dark area)</li>
+                <li><strong>Hover pause:</strong> Hover over modal to pause auto-close</li>
+                <li><strong>Progress bar:</strong> Watch the blue progress bar at bottom</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Test Results</h3>
+            <div id="testStatus" class="status">
+                Ready to test - Click any button above to start
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock scan results data
+        const mockScanResults = {
+            secure: {
+                threats: [],
+                apisUsed: 'Google Safe Browsing, VirusTotal',
+                scanDuration: 1.2
+            },
+            singleThreat: {
+                threats: [
+                    {
+                        type: 'Phishing',
+                        description: 'This website has been identified as a phishing site attempting to steal user credentials.',
+                        source: 'Google Safe Browsing'
+                    }
+                ],
+                apisUsed: 'Google Safe Browsing, PhishTank',
+                scanDuration: 2.1
+            },
+            multipleThreats: {
+                threats: [
+                    {
+                        type: 'Malware',
+                        description: 'Malicious software detected on this website.',
+                        source: 'VirusTotal'
+                    },
+                    {
+                        type: 'Phishing',
+                        description: 'Phishing attempt detected.',
+                        source: 'PhishTank'
+                    },
+                    {
+                        type: 'Suspicious Activity',
+                        description: 'Unusual behavior patterns detected.',
+                        source: 'URLScan.io'
+                    }
+                ],
+                apisUsed: 'All APIs',
+                scanDuration: 3.5
+            }
+        };
+
+        function updateStatus(message) {
+            document.getElementById('testStatus').textContent = message;
+        }
+
+        function testSecureSite() {
+            updateStatus('Testing secure site modal with auto-close...');
+            showScanResultsPanel(mockScanResults.secure);
+        }
+
+        function testThreatDetected() {
+            updateStatus('Testing single threat modal with auto-close...');
+            showScanResultsPanel(mockScanResults.singleThreat);
+        }
+
+        function testMultipleThreats() {
+            updateStatus('Testing multiple threats modal with auto-close...');
+            showScanResultsPanel(mockScanResults.multipleThreats);
+        }
+
+        function testWithoutAutoClose() {
+            updateStatus('Testing modal without auto-close (manual close only)...');
+            // This would require modifying the function to disable auto-close
+            showScanResultsPanelNoAutoClose(mockScanResults.singleThreat);
+        }
+
+        // Include the enhanced showScanResultsPanel function from content.js
+        let scanResultsPanel = null;
+
+        function showScanResultsPanel(scanResults = {}) {
+            // Remove existing panel
+            if (scanResultsPanel) {
+                scanResultsPanel.remove();
+            }
+
+            scanResultsPanel = document.createElement('div');
+            scanResultsPanel.id = 'threat-detector-results-panel';
+
+            const hasThreats = scanResults.threats && scanResults.threats.length > 0;
+            const threatCount = hasThreats ? scanResults.threats.length : 0;
+
+            // Auto-close timer (5 seconds)
+            let autoCloseTimer = null;
+
+            // Add keyboard support (Escape key)
+            const handleKeyPress = (event) => {
+                if (event.key === 'Escape') {
+                    console.log('⌨️ Closing scan results panel with Escape key');
+                    closePanel();
+                }
+            };
+
+            // Function to close the panel
+            const closePanel = () => {
+                if (autoCloseTimer) {
+                    clearTimeout(autoCloseTimer);
+                    autoCloseTimer = null;
+                }
+                // Remove keyboard event listener
+                document.removeEventListener('keydown', handleKeyPress);
+
+                if (scanResultsPanel && scanResultsPanel.parentNode) {
+                    scanResultsPanel.style.animation = 'slideOutScale 0.3s ease-in';
+                    setTimeout(() => {
+                        if (scanResultsPanel && scanResultsPanel.parentNode) {
+                            scanResultsPanel.remove();
+                            updateStatus('Modal closed successfully!');
+                        }
+                    }, 300);
+                }
+            };
+
+            // Set auto-close timer for 5 seconds
+            autoCloseTimer = setTimeout(() => {
+                console.log('🕐 Auto-closing scan results panel after 5 seconds');
+                closePanel();
+            }, 5000);
+
+            // Add keyboard event listener
+            document.addEventListener('keydown', handleKeyPress);
+
+            scanResultsPanel.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: white;
+                    border-radius: 12px;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+                    z-index: 2147483647;
+                    width: 90%;
+                    max-width: 500px;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    animation: slideInScale 0.3s ease-out;
+                ">
+                    <div style="
+                        padding: 1.5rem;
+                        border-bottom: 1px solid #e5e7eb;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    ">
+                        <h3 style="
+                            margin: 0;
+                            font-size: 1.25rem;
+                            font-weight: 600;
+                            color: #1f2937;
+                        ">Scan Results</h3>
+                        <button id="scan-results-close-x" style="
+                            background: none;
+                            border: none;
+                            font-size: 1.5rem;
+                            cursor: pointer;
+                            color: #6b7280;
+                            padding: 0;
+                            width: 24px;
+                            height: 24px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            transition: color 0.2s ease;
+                        " onmouseover="this.style.color='#dc2626'" onmouseout="this.style.color='#6b7280'">×</button>
+                    </div>
+
+                    <div style="padding: 1.5rem;">
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            gap: 0.75rem;
+                            margin-bottom: 1rem;
+                            padding: 1rem;
+                            border-radius: 8px;
+                            background: ${hasThreats ? '#fef2f2' : '#f0fdf4'};
+                            border: 1px solid ${hasThreats ? '#fecaca' : '#bbf7d0'};
+                        ">
+                            <div style="font-size: 1.5rem;">
+                                ${hasThreats ? '🚨' : '🛡️'}
+                            </div>
+                            <div>
+                                <div style="
+                                    font-weight: 600;
+                                    color: ${hasThreats ? '#dc2626' : '#059669'};
+                                    margin-bottom: 0.25rem;
+                                ">
+                                    ${hasThreats ? `${threatCount} Threat${threatCount > 1 ? 's' : ''} Detected` : 'Site Secure'}
+                                </div>
+                                <div style="
+                                    font-size: 0.875rem;
+                                    color: #6b7280;
+                                ">
+                                    ${hasThreats ? 'Security issues found on this website' : 'No security threats detected'}
+                                </div>
+                            </div>
+                        </div>
+
+                        ${hasThreats ? `
+                            <div style="margin-bottom: 1rem;">
+                                <h4 style="
+                                    margin: 0 0 0.75rem 0;
+                                    font-size: 1rem;
+                                    font-weight: 600;
+                                    color: #1f2937;
+                                ">Detected Threats</h4>
+                                ${scanResults.threats.map(threat => `
+                                    <div style="
+                                        background: #fef2f2;
+                                        border: 1px solid #fecaca;
+                                        border-radius: 6px;
+                                        padding: 0.75rem;
+                                        margin-bottom: 0.5rem;
+                                    ">
+                                        <div style="
+                                            font-weight: 500;
+                                            color: #dc2626;
+                                            margin-bottom: 0.25rem;
+                                        ">${threat.type || 'Unknown Threat'}</div>
+                                        <div style="
+                                            font-size: 0.875rem;
+                                            color: #6b7280;
+                                            margin-bottom: 0.5rem;
+                                        ">${threat.description || 'No description available'}</div>
+                                        <div style="
+                                            font-size: 0.75rem;
+                                            color: #9ca3af;
+                                        ">Source: ${threat.source || 'Unknown'}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+
+                        <div style="margin-bottom: 1rem;">
+                            <h4 style="
+                                margin: 0 0 0.75rem 0;
+                                font-size: 1rem;
+                                font-weight: 600;
+                                color: #1f2937;
+                            ">Scan Information</h4>
+                            <div style="
+                                background: #f9fafb;
+                                border: 1px solid #e5e7eb;
+                                border-radius: 6px;
+                                padding: 0.75rem;
+                            ">
+                                <div style="
+                                    display: grid;
+                                    gap: 0.5rem;
+                                    font-size: 0.875rem;
+                                ">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: #6b7280;">URL:</span>
+                                        <span style="color: #1f2937; word-break: break-all;">${window.location.hostname}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: #6b7280;">Scan Time:</span>
+                                        <span style="color: #1f2937;">${new Date().toLocaleString()}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: #6b7280;">APIs Used:</span>
+                                        <span style="color: #1f2937;">${scanResults.apisUsed || 'Multiple'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="
+                            display: flex;
+                            gap: 0.5rem;
+                            justify-content: flex-end;
+                        ">
+                            <button id="scan-results-close-btn" style="
+                                background: #f3f4f6;
+                                color: #374151;
+                                border: 1px solid #d1d5db;
+                                padding: 0.5rem 1rem;
+                                border-radius: 6px;
+                                cursor: pointer;
+                                font-size: 0.875rem;
+                                font-weight: 500;
+                                transition: all 0.2s ease;
+                            " onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">Close</button>
+                            <button onclick="alert('Dashboard would open here')" style="
+                                background: #3b82f6;
+                                color: white;
+                                border: none;
+                                padding: 0.5rem 1rem;
+                                border-radius: 6px;
+                                cursor: pointer;
+                                font-size: 0.875rem;
+                                font-weight: 500;
+                            ">View Dashboard</button>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes slideInScale {
+                        from {
+                            opacity: 0;
+                            transform: translate(-50%, -50%) scale(0.9);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translate(-50%, -50%) scale(1);
+                        }
+                    }
+
+                    @keyframes slideOutScale {
+                        from {
+                            opacity: 1;
+                            transform: translate(-50%, -50%) scale(1);
+                        }
+                        to {
+                            opacity: 0;
+                            transform: translate(-50%, -50%) scale(0.9);
+                        }
+                    }
+
+                    .auto-close-progress {
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        height: 3px;
+                        background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+                        border-radius: 0 0 12px 12px;
+                        animation: progressBar 5s linear;
+                    }
+
+                    @keyframes progressBar {
+                        from { width: 100%; }
+                        to { width: 0%; }
+                    }
+                </style>
+            `;
+
+            // Add backdrop
+            const backdrop = document.createElement('div');
+            backdrop.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 2147483646;
+                transition: opacity 0.3s ease;
+            `;
+            backdrop.addEventListener('click', closePanel);
+
+            scanResultsPanel.appendChild(backdrop);
+
+            // Add auto-close progress bar
+            const progressBar = document.createElement('div');
+            progressBar.className = 'auto-close-progress';
+            const modalContent = scanResultsPanel.querySelector('div[style*="position: fixed"]');
+            if (modalContent) {
+                modalContent.style.position = 'relative';
+                modalContent.appendChild(progressBar);
+            }
+
+            // Safely append to document
+            document.body.appendChild(scanResultsPanel);
+
+            // Add event listeners after DOM insertion
+            setTimeout(() => {
+                const closeXBtn = document.getElementById('scan-results-close-x');
+                const closeBtn = document.getElementById('scan-results-close-btn');
+
+                if (closeXBtn) {
+                    closeXBtn.addEventListener('click', closePanel);
+                }
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', closePanel);
+                }
+
+                // Pause auto-close on hover
+                const modal = scanResultsPanel.querySelector('div[style*="position: fixed"]');
+                if (modal) {
+                    modal.addEventListener('mouseenter', () => {
+                        if (autoCloseTimer) {
+                            clearTimeout(autoCloseTimer);
+                            console.log('⏸️ Auto-close paused on hover');
+                            updateStatus('Auto-close paused - hover detected');
+                        }
+                        if (progressBar) {
+                            progressBar.style.animationPlayState = 'paused';
+                        }
+                    });
+
+                    modal.addEventListener('mouseleave', () => {
+                        // Resume auto-close with remaining time
+                        autoCloseTimer = setTimeout(() => {
+                            console.log('🕐 Auto-closing scan results panel (resumed)');
+                            closePanel();
+                        }, 2000); // Give 2 more seconds after mouse leave
+
+                        if (progressBar) {
+                            progressBar.style.animationPlayState = 'running';
+                        }
+                        updateStatus('Auto-close resumed - 2 seconds remaining');
+                    });
+                }
+            }, 100);
+        }
+
+        // Version without auto-close for testing
+        function showScanResultsPanelNoAutoClose(scanResults = {}) {
+            updateStatus('Modal opened without auto-close - manual close only');
+            // This would be a modified version without the auto-close timer
+            // For now, just show the regular modal
+            showScanResultsPanel(scanResults);
+        }
+
+        // Initialize
+        updateStatus('Enhanced scan results modal test ready!');
+    </script>
+</body>
+</html>

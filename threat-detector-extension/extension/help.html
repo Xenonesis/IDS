@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Threat Detector - Help & Support</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Custom Properties for Design System */
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #dbeafe;
+            --success-color: #059669;
+            --success-light: #d1fae5;
+            --warning-color: #d97706;
+            --warning-light: #fed7aa;
+            --danger-color: #dc2626;
+            --danger-light: #fecaca;
+            --neutral-50: #f9fafb;
+            --neutral-100: #f3f4f6;
+            --neutral-200: #e5e7eb;
+            --neutral-300: #d1d5db;
+            --neutral-400: #9ca3af;
+            --neutral-500: #6b7280;
+            --neutral-600: #4b5563;
+            --neutral-700: #374151;
+            --neutral-800: #1f2937;
+            --neutral-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 0.75rem;
+            --spacing-lg: 1rem;
+            --spacing-xl: 1.5rem;
+            --spacing-2xl: 2rem;
+            --spacing-3xl: 3rem;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            --transition-fast: 150ms ease-in-out;
+            --transition-normal: 250ms ease-in-out;
+            --transition-slow: 350ms ease-in-out;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+            background: linear-gradient(135deg, var(--neutral-50) 0%, var(--neutral-100) 100%);
+            color: var(--neutral-800);
+            line-height: 1.6;
+            font-size: var(--font-size-base);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-2xl);
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+            color: white;
+            padding: var(--spacing-3xl) 0;
+            margin-bottom: var(--spacing-3xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-4xl);
+            margin: 0 auto var(--spacing-lg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-title {
+            font-size: var(--font-size-4xl);
+            font-weight: 800;
+            margin: 0 0 var(--spacing-md);
+            letter-spacing: -0.025em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-subtitle {
+            font-size: var(--font-size-xl);
+            opacity: 0.9;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        /* Navigation */
+        .nav {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--neutral-200);
+        }
+
+        .nav-list {
+            display: flex;
+            gap: var(--spacing-lg);
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            color: var(--neutral-600);
+            font-weight: 500;
+            transition: var(--transition-normal);
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Content Sections */
+        .section {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-2xl);
+            margin-bottom: var(--spacing-2xl);
+            border: 1px solid var(--neutral-200);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-normal);
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 2px solid var(--neutral-100);
+        }
+
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-light), var(--success-light));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-2xl);
+            color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            margin: 0;
+            color: var(--neutral-800);
+            letter-spacing: -0.025em;
+        }
+
+        .section-subtitle {
+            font-size: var(--font-size-base);
+            color: var(--neutral-500);
+            margin: var(--spacing-xs) 0 0;
+            font-weight: 400;
+        }
+
+        /* FAQ Styles */
+        .faq-item {
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-lg);
+            overflow: hidden;
+            transition: var(--transition-normal);
+        }
+
+        .faq-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .faq-question {
+            background: var(--neutral-50);
+            padding: var(--spacing-lg);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--neutral-800);
+            transition: var(--transition-normal);
+        }
+
+        .faq-question:hover {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .faq-question.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .faq-icon {
+            font-size: var(--font-size-lg);
+            transition: var(--transition-normal);
+        }
+
+        .faq-question.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 var(--spacing-lg);
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition-slow);
+            background: white;
+        }
+
+        .faq-answer.active {
+            padding: var(--spacing-lg);
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            margin: 0 0 var(--spacing-md);
+            color: var(--neutral-600);
+            line-height: 1.7;
+        }
+
+        .faq-answer p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
+        }
+
+        .feature-card {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            border: 1px solid var(--neutral-200);
+            transition: var(--transition-normal);
+        }
+
+        .feature-card:hover {
+            background: white;
+            border-color: var(--primary-color);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--success-color));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-lg);
+            color: white;
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .feature-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0 0 var(--spacing-sm);
+            color: var(--neutral-800);
+        }
+
+        .feature-description {
+            color: var(--neutral-600);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            text-decoration: none;
+            font-family: inherit;
+            min-height: 44px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--neutral-700);
+            border: 1px solid var(--neutral-300);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--neutral-50);
+            border-color: var(--neutral-400);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Contact Section */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
+        }
+
+        .contact-card {
+            background: linear-gradient(135deg, var(--primary-light), var(--success-light));
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            text-align: center;
+            border: 1px solid var(--primary-color);
+            transition: var(--transition-normal);
+        }
+
+        .contact-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-2xl);
+            color: white;
+            margin: 0 auto var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .contact-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0 0 var(--spacing-sm);
+            color: var(--neutral-800);
+        }
+
+        .contact-description {
+            color: var(--neutral-600);
+            margin: 0 0 var(--spacing-lg);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-lg);
+            }
+
+            .header {
+                padding: var(--spacing-2xl) 0;
+            }
+
+            .header-title {
+                font-size: var(--font-size-3xl);
+            }
+
+            .header-subtitle {
+                font-size: var(--font-size-lg);
+            }
+
+            .nav-list {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .section {
+                padding: var(--spacing-xl);
+            }
+
+            .section-header {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--spacing-md);
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus styles */
+        .nav-link:focus,
+        .btn:focus,
+        .faq-question:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Animation for smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-icon">🛡️</div>
+                <h1 class="header-title">Help & Support</h1>
+                <p class="header-subtitle">Everything you need to know about AI Threat Detector</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="nav" role="navigation" aria-label="Help navigation">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="#getting-started" class="nav-link active">
+                        <span>🚀</span>
+                        <span>Getting Started</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#features" class="nav-link">
+                        <span>⚡</span>
+                        <span>Features</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#faq" class="nav-link">
+                        <span>❓</span>
+                        <span>FAQ</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#troubleshooting" class="nav-link">
+                        <span>🔧</span>
+                        <span>Troubleshooting</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">
+                        <span>📞</span>
+                        <span>Contact</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">
+                        <span>ℹ️</span>
+                        <span>About</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main role="main">
+            <section id="getting-started" class="section">
+                <div class="section-header">
+                    <div class="section-icon">🚀</div>
+                    <div>
+                        <h2 class="section-title">Getting Started</h2>
+                        <p class="section-subtitle">Quick setup guide to protect your browsing</p>
+                    </div>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">1️⃣</div>
+                        <h3 class="feature-title">Install Extension</h3>
+                        <p class="feature-description">Add AI Threat Detector to your browser from the Chrome Web Store. The extension will automatically start protecting you.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">2️⃣</div>
+                        <h3 class="feature-title">Configure Settings</h3>
+                        <p class="feature-description">Click the extension icon and configure your security preferences. Enable real-time scanning and threat detection.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">3️⃣</div>
+                        <h3 class="feature-title">Browse Safely</h3>
+                        <p class="feature-description">The extension works automatically in the background, scanning websites and blocking threats in real-time.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" class="section">
+                <div class="section-header">
+                    <div class="section-icon">⚡</div>
+                    <div>
+                        <h2 class="section-title">Key Features</h2>
+                        <p class="section-subtitle">Comprehensive protection for your online security</p>
+                    </div>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🛡️</div>
+                        <h3 class="feature-title">Real-Time Threat Detection</h3>
+                        <p class="feature-description">Advanced AI algorithms scan websites in real-time to detect phishing, malware, and suspicious content before it can harm your device.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🚫</div>
+                        <h3 class="feature-title">Universal Content Blocking</h3>
+                        <p class="feature-description">Blocks popups, ads, redirects, and malicious downloads across all websites with intelligent pattern recognition.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">Security Analytics</h3>
+                        <p class="feature-description">Detailed statistics and reports on blocked threats, scan history, and security metrics to keep you informed.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3 class="feature-title">Multi-API Integration</h3>
+                        <p class="feature-description">Leverages Google Safe Browsing, VirusTotal, PhishTank, and URLScan.io for comprehensive threat intelligence.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">Performance Optimized</h3>
+                        <p class="feature-description">Lightweight design with intelligent caching ensures fast browsing without compromising security.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3 class="feature-title">Smart Whitelisting</h3>
+                        <p class="feature-description">Temporary and permanent whitelist options for trusted sites with automatic expiration and management.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="faq" class="section">
+                <div class="section-header">
+                    <div class="section-icon">❓</div>
+                    <div>
+                        <h2 class="section-title">Frequently Asked Questions</h2>
+                        <p class="section-subtitle">Common questions and answers about the extension</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                        <span>How does the AI threat detection work?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our AI threat detection uses advanced machine learning algorithms combined with multiple threat intelligence APIs including Google Safe Browsing, VirusTotal, PhishTank, and URLScan.io.</p>
+                        <p>The system analyzes website content, URLs, scripts, and behavioral patterns in real-time to identify potential threats such as phishing attempts, malware distribution, suspicious redirects, and malicious downloads.</p>
+                        <p>The AI continuously learns from new threat patterns and updates its detection capabilities to stay ahead of emerging security risks.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                        <span>Does the extension slow down my browsing?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No, the extension is designed for optimal performance with minimal impact on browsing speed. We use several optimization techniques:</p>
+                        <p>• <strong>Intelligent Caching:</strong> Scan results are cached for 5 minutes to avoid repeated API calls</p>
+                        <p>• <strong>Asynchronous Processing:</strong> All security checks run in the background without blocking page loads</p>
+                        <p>• <strong>Lightweight Design:</strong> The extension uses minimal memory and CPU resources</p>
+                        <p>• <strong>Smart Scanning:</strong> Only scans when necessary (page loads, content changes) rather than continuously</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                        <span>What types of threats can the extension detect?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The extension can detect and protect against a wide range of online threats:</p>
+                        <p>• <strong>Phishing Sites:</strong> Fake websites designed to steal credentials or personal information</p>
+                        <p>• <strong>Malware Distribution:</strong> Sites hosting or distributing malicious software</p>
+                        <p>• <strong>Suspicious Downloads:</strong> Potentially harmful files and executables</p>
+                        <p>• <strong>Malicious Redirects:</strong> Unwanted redirects to dangerous websites</p>
+                        <p>• <strong>Popup Attacks:</strong> Aggressive popups and overlay attacks</p>
+                        <p>• <strong>Cryptocurrency Scams:</strong> Fake crypto exchanges and investment schemes</p>
+                        <p>• <strong>Social Engineering:</strong> Sites using deceptive tactics to manipulate users</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                        <span>How do I configure the extension settings?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>To configure the extension settings:</p>
+                        <p>1. Click the AI Threat Detector icon in your browser toolbar</p>
+                        <p>2. In the popup, scroll down to the "Protection Settings" section</p>
+                        <p>3. Toggle the switches for different protection features:</p>
+                        <p>• <strong>Real-Time Scanning:</strong> Enable/disable automatic website scanning</p>
+                        <p>• <strong>Popup Blocking:</strong> Control popup and overlay blocking</p>
+                        <p>• <strong>Content Filtering:</strong> Manage ad and content blocking</p>
+                        <p>• <strong>Threat Notifications:</strong> Configure alert preferences</p>
+                        <p>4. Click "Save Settings" to apply your changes</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                        <span>Can I whitelist trusted websites?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, the extension provides flexible whitelisting options:</p>
+                        <p>• <strong>Temporary Whitelist:</strong> Disable protection for a specific site for 1 hour</p>
+                        <p>• <strong>Permanent Whitelist:</strong> Add trusted sites to your permanent whitelist</p>
+                        <p>• <strong>Smart Whitelisting:</strong> The extension learns from your browsing patterns</p>
+                        <p>To whitelist a site, click the extension icon while on the website and select "Add to Whitelist" or "Temporary Whitelist" from the popup menu.</p>
+                        <p>You can manage your whitelist through the extension settings or the dashboard.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                        <span>Is my browsing data private and secure?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, we take your privacy very seriously:</p>
+                        <p>• <strong>No Personal Data Collection:</strong> We don't collect or store personal information</p>
+                        <p>• <strong>Local Processing:</strong> Most security checks are performed locally on your device</p>
+                        <p>• <strong>Encrypted Communications:</strong> All API communications use HTTPS encryption</p>
+                        <p>• <strong>No Browsing History:</strong> We don't track or store your browsing history</p>
+                        <p>• <strong>Anonymous Threat Queries:</strong> Threat detection queries are anonymized</p>
+                        <p>• <strong>Open Source:</strong> The extension code is transparent and auditable</p>
+                        <p>For more details, please review our Privacy Policy in the About section.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="troubleshooting" class="section">
+                <div class="section-header">
+                    <div class="section-icon">🔧</div>
+                    <div>
+                        <h2 class="section-title">Troubleshooting</h2>
+                        <p class="section-subtitle">Solutions to common issues and problems</p>
+                    </div>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <h3 class="feature-title">Extension Not Working</h3>
+                        <p class="feature-description">If the extension isn't working properly, try refreshing the page, restarting your browser, or disabling and re-enabling the extension in your browser settings.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚠️</div>
+                        <h3 class="feature-title">False Positive Alerts</h3>
+                        <p class="feature-description">If a trusted site is being blocked, add it to your whitelist. You can also report false positives to help improve our detection accuracy.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🐌</div>
+                        <h3 class="feature-title">Slow Performance</h3>
+                        <p class="feature-description">Clear your browser cache, disable unnecessary extensions, or adjust the scanning sensitivity in the extension settings to improve performance.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">Statistics Not Updating</h3>
+                        <p class="feature-description">Refresh the extension popup or restart your browser. If the issue persists, check that the extension has proper permissions in your browser settings.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3 class="feature-title">API Key Issues</h3>
+                        <p class="feature-description">Ensure your API keys are correctly configured in the settings. Some features require valid API keys from threat intelligence providers.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌐</div>
+                        <h3 class="feature-title">Website Compatibility</h3>
+                        <p class="feature-description">If a website isn't loading properly, try temporarily disabling the extension for that site or adding it to your whitelist.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact" class="section">
+                <div class="section-header">
+                    <div class="section-icon">📞</div>
+                    <div>
+                        <h2 class="section-title">Contact & Support</h2>
+                        <p class="section-subtitle">Get help when you need it</p>
+                    </div>
+                </div>
+
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <div class="contact-icon">📧</div>
+                        <h3 class="contact-title">Email Support</h3>
+                        <p class="contact-description">Get detailed help with technical issues and feature requests</p>
+                        <a href="mailto:support@aithreatdetector.com" class="btn btn-primary">
+                            <span>📧</span>
+                            <span>Send Email</span>
+                        </a>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon">💬</div>
+                        <h3 class="contact-title">Community Forum</h3>
+                        <p class="contact-description">Join our community to share tips and get help from other users</p>
+                        <a href="#" class="btn btn-secondary">
+                            <span>💬</span>
+                            <span>Join Forum</span>
+                        </a>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon">🐛</div>
+                        <h3 class="contact-title">Bug Reports</h3>
+                        <p class="contact-description">Report bugs and issues to help us improve the extension</p>
+                        <a href="#" class="btn btn-secondary">
+                            <span>🐛</span>
+                            <span>Report Bug</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
+
+            // Handle navigation clicks
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+
+                        // Remove active class from all links
+                        navLinks.forEach(l => l.classList.remove('active'));
+
+                        // Add active class to clicked link
+                        this.classList.add('active');
+
+                        // Scroll to target section
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetSection = document.getElementById(targetId);
+
+                        if (targetSection) {
+                            targetSection.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Handle scroll-based navigation highlighting
+            window.addEventListener('scroll', function() {
+                let current = '';
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    const sectionHeight = section.clientHeight;
+
+                    if (window.pageYOffset >= sectionTop &&
+                        window.pageYOffset < sectionTop + sectionHeight) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            // FAQ accordion functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    const icon = this.querySelector('.faq-icon');
+                    const isActive = this.classList.contains('active');
+
+                    // Close all other FAQ items
+                    faqQuestions.forEach(q => {
+                        q.classList.remove('active');
+                        q.nextElementSibling.classList.remove('active');
+                        q.setAttribute('aria-expanded', 'false');
+                    });
+
+                    // Toggle current FAQ item
+                    if (!isActive) {
+                        this.classList.add('active');
+                        answer.classList.add('active');
+                        this.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                // Keyboard support for FAQ
+                question.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add loading animation to sections
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections for animation
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                observer.observe(section);
+            });
+
+            console.log('🛡️ AI Threat Detector Help page loaded');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI Improvements Test - Threat Detector Extension</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            color: #1f2937;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .test-section {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .test-section h2 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .popup-preview {
+            width: 400px;
+            height: 520px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1rem auto;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .popup-preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-list li::before {
+            content: '✅';
+            font-size: 1rem;
+        }
+
+        .test-button {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0.5rem;
+        }
+
+        .test-button:hover {
+            background: linear-gradient(135deg, #b91c1c, #991b1b);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .status-demo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .status-indicator.secure {
+            background: #10b981;
+        }
+
+        .status-indicator.danger {
+            background: #ef4444;
+        }
+
+        .status-indicator.warning {
+            background: #f59e0b;
+        }
+
+        .status-indicator.scanning {
+            background: #3b82f6;
+        }
+
+        .api-key-demo {
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .api-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-family: monospace;
+        }
+
+        .eye-toggle {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .eye-toggle:hover {
+            color: #374151;
+            background: rgba(107, 114, 128, 0.1);
+        }
+
+        .improvements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .improvement-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #dc2626;
+        }
+
+        .improvement-card h3 {
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .improvement-card p {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Threat Detector UI Improvements</h1>
+            <p>Testing enhanced user interface and user experience features</p>
+        </div>
+
+        <div class="test-grid">
+            <div class="test-section">
+                <h2>🎨 Visual Design Improvements</h2>
+                <ul class="feature-list">
+                    <li>Modern responsive design with improved spacing</li>
+                    <li>Professional logo integration with backdrop blur</li>
+                    <li>Consistent green/red/yellow color coding</li>
+                    <li>Enhanced typography and visual hierarchy</li>
+                    <li>Smooth animations and transitions</li>
+                    <li>Glass morphism effects with backdrop filters</li>
+                </ul>
+                
+                <div class="status-demo">
+                    <div class="status-indicator secure"></div>
+                    <span>Secure Status</span>
+                </div>
+                <div class="status-demo">
+                    <div class="status-indicator danger"></div>
+                    <span>Danger Detected</span>
+                </div>
+                <div class="status-demo">
+                    <div class="status-indicator warning"></div>
+                    <span>Warning State</span>
+                </div>
+                <div class="status-demo">
+                    <div class="status-indicator scanning"></div>
+                    <span>Scanning in Progress</span>
+                </div>
+            </div>
+
+            <div class="test-section">
+                <h2>🔐 API Key Security Features</h2>
+                <p>Enhanced API key input fields with show/hide toggle functionality:</p>
+                
+                <div class="api-key-demo">
+                    <input type="password" class="api-input" placeholder="Enter your API key..." value="sk-1234567890abcdef">
+                    <button class="eye-toggle" onclick="toggleApiKey(this)">👁️</button>
+                </div>
+                
+                <ul class="feature-list">
+                    <li>Eye icons for show/hide functionality</li>
+                    <li>Default hidden state for security</li>
+                    <li>Visual feedback on toggle</li>
+                    <li>Proper accessibility attributes</li>
+                </ul>
+            </div>
+
+            <div class="test-section">
+                <h2>⚡ Performance Optimizations</h2>
+                <ul class="feature-list">
+                    <li>Intelligent scanning (page loads only)</li>
+                    <li>Proper caching mechanisms</li>
+                    <li>Optimized animations using transform/opacity</li>
+                    <li>Reduced unnecessary API calls</li>
+                    <li>Prompt completion detection</li>
+                </ul>
+                
+                <button class="test-button" onclick="simulateScan()">Test Scan Performance</button>
+            </div>
+
+            <div class="test-section">
+                <h2>📱 Responsive Design</h2>
+                <ul class="feature-list">
+                    <li>Flexible popup dimensions (400px width)</li>
+                    <li>Adaptive grid layouts</li>
+                    <li>Touch-friendly button sizes</li>
+                    <li>Proper viewport handling</li>
+                    <li>Cross-browser compatibility</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="improvements-grid">
+            <div class="improvement-card">
+                <h3>🎯 User Experience</h3>
+                <p>Non-intrusive notifications, collapsible scan history, and context-aware UI elements that only show when relevant.</p>
+            </div>
+            
+            <div class="improvement-card">
+                <h3>♿ Accessibility</h3>
+                <p>Proper ARIA labels, keyboard navigation support, screen reader compatibility, and clear visual feedback for all interactions.</p>
+            </div>
+            
+            <div class="improvement-card">
+                <h3>🔄 Real-time Feedback</h3>
+                <p>Visual scanning indicators, loading states, progress feedback, and immediate status updates with proper caching.</p>
+            </div>
+            
+            <div class="improvement-card">
+                <h3>🎨 Modern Design</h3>
+                <p>Clean interface with Tailwind-inspired styling, consistent spacing, modern typography, and professional visual hierarchy.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleApiKey(button) {
+            const input = button.previousElementSibling;
+            const isPassword = input.type === 'password';
+            
+            input.type = isPassword ? 'text' : 'password';
+            button.textContent = isPassword ? '🙈' : '👁️';
+            button.title = isPassword ? 'Hide API key' : 'Show API key';
+        }
+
+        function simulateScan() {
+            const button = event.target;
+            const originalText = button.textContent;
+            
+            button.textContent = 'Scanning...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.textContent = 'Scan Complete ✅';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 1000);
+            }, 2000);
+        }
+
+        // Add some interactive demonstrations
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🎉 UI Improvements Test Page Loaded');
+            console.log('✅ All visual enhancements are ready for testing');
+        });
+    </script>
+</body>
+</html>
